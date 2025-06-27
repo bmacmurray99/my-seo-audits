@@ -10,8 +10,7 @@ if [ -z "$1" ]; then
 fi
 
 URL_TO_CRAWL=$1
-TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-OUTPUT_DIR="/home/autogpt/sfScripts/screamingfrog_output/${TIMESTAMP}"
+OUTPUT_DIR="/home/autogpt/sfScripts/screamingfrog_output/"
 
 # IMPORTANT: Replace with the actual path to your Screaming Frog CLI executable
 # For Linux, it might be 'screamingfrogseospider' if it's in your PATH, or a full path like '/opt/screamingfrogseospider/ScreamingFrogSEOSpiderCli'
@@ -20,9 +19,9 @@ OUTPUT_DIR="/home/autogpt/sfScripts/screamingfrog_output/${TIMESTAMP}"
 SCREAMING_FROG_CLI="screamingfrogseospider" # Assuming it's in PATH or adjust to full path
 
 echo "Starting Screaming Frog crawl for: ${URL_TO_CRAWL}"
-echo "Output will be saved to: ${OUTPUT_DIR}"
+echo "Output will be saved to: ${OUTPUT_DIR} (Screaming Frog will create a timestamped subfolder)"
 
-mkdir -p "${OUTPUT_DIR}"
+mkdir -p "${OUTPUT_DIR}" # Ensure the base output directory exists
 
 # List of tabs to export (based on common and comprehensive options)
 # This list can be expanded further by checking the Screaming Frog GUI
@@ -48,11 +47,11 @@ SAVE_REPORTS="Crawl Overview,Issues Overview"
 
 if [ $? -eq 0 ]; then
     echo "Screaming Frog crawl completed successfully."
-    echo "Output directory: ${OUTPUT_DIR}"
+    echo "Output directory: ${OUTPUT_DIR} (Screaming Frog created a timestamped subfolder within this directory)."
+    echo "To generate the PowerPoint presentation, navigate to the latest timestamped folder in ${OUTPUT_DIR} and run:"
+    echo "python3 generate_powerpoint.py <LATEST_TIMESTAMPED_FOLDER>/issues_overview.csv"
+    echo "Example: python3 generate_powerpoint.py ${OUTPUT_DIR}20250627_123456/issues_overview.csv"
 else
     echo "Screaming Frog crawl failed."
     exit 1
 fi
-
-echo "To generate the PowerPoint presentation, run:"
-echo "python3 generate_powerpoint.py ${OUTPUT_DIR}/issues_overview.csv"
